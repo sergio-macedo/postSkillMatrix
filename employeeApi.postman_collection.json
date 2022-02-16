@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "b7383ffb-711e-40d9-8367-bb42292dc742",
+		"name": "employeeApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "listAllEmployees",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/employees",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addEmployee",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"firstName\": \"Paul\",\r\n    \"lastName\": \"Mccartney\",\r\n    \"email\": \"paul@beatles.com\",\r\n    \"password\": \"ram\",\r\n    \"mobileNumber\": \"\",\r\n    \"location\": \"Liverpool\",\r\n    \"aboutMe\": \"Bad ass bassplayer\",\r\n    \"birthdate\": \"2021-11-26T11:24:15.234+00:00\",\r\n    \"jobTitle\": \"Singer\",\r\n    \"department\": \"Beatles\",\r\n    \"skills\": [],\r\n    \"languages\": []\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/employees",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getEmployeeById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/employees/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"employees",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateEmployee",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"id\": 1,\r\n        \"firstName\": \"John\",\r\n        \"lastName\": \"Lennon\",\r\n        \"email\": \"john@beatles.com\",\r\n        \"password\": \"36@4$\",\r\n        \"mobileNumber\": \"\",\r\n        \"location\": \"Liverpool\",\r\n        \"aboutMe\": \"Bad ass songwriter\",\r\n        \"birthdate\": \"2021-11-26T11:29:38.789+00:00\",\r\n        \"jobTitle\": \"Singer\",\r\n        \"department\": \"Beatles\",\r\n        \"skills\": [],\r\n        \"languages\": []\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/employees/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"employees",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteEmployee",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/employees/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"employees",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

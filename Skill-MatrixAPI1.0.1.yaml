@@ -1,0 +1,874 @@
+openapi: 3.0.3
+info:
+  title: Skill-Matrix Api
+  description: This is the API for the Skill-Matrix project.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: https://api.skillmatrix.com
+    description: normal employee usage.
+    variables:
+      user:
+        description: path for normal user
+        default: user
+
+security:
+  - basicAuth: []
+paths:
+  /employees:
+    get:
+      tags:
+        - employees
+      summary: reads all employees data
+      description: This operation provides a view of the employee data in JSON
+      operationId: getAllEmployees
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: Filter employees where first or last name has any match.
+          schema:
+            type: string
+            example: Ringo, Rin, go, Starr, Sta, etc.
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+        "404":
+          description: could not access the employees.
+    post:
+      tags:
+        - employees
+      summary: adds a new employee
+      description: Add a new employee to the system
+      operationId: addEmployee
+      requestBody:
+        description: the new employee data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      responses:
+        "201":
+          description: Success. Body includes the auto-generated key for the new customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        "405":
+          description: Invalid Input
+
+  /employees/{id}:
+    get:
+      tags:
+        - employees
+      summary: get employees per id.
+      parameters:
+        - name: id
+          in: path
+          description: the id from the employee
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: retrieves successfully the specific employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        "400":
+          description: Bad Request
+        "404":
+          description: Employee not found
+    put:
+      tags:
+        - employees
+      summary: update existing employee
+      description: Updates an existing employee with new data
+      operationId: updateEmployee
+      parameters:
+        - name: id
+          in: path
+          description: the id of the employee to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        description: the updated customer data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+        required: true
+      responses:
+        "204":
+          description: Success.
+        "404":
+          description: Customer Not Found
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - employees
+      summary: delete an existing employee
+      description: Deletes an existing employee in the system.
+      operationId: deleteEmployee
+      parameters:
+        - name: id
+          in: path
+          description: the id of the employee to delete
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The employee was deleted
+        "404":
+          description: Employee Not Found
+        "500":
+          description: Internal Server Error
+  /employees/{id}/skills:
+    get:
+      tags:
+        - employees
+      summary: get all the skills from a specific employee
+      operationId: employeeGetSkills
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UpdateSkill'
+        "404":
+          description: could not access the skill on said id.
+    post:
+      tags:
+        - employees
+      summary: post a skill to a specific employee
+      operationId: employeeAddSkills
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Skill'
+        "404":
+          description: could not access the skill on said id.
+
+
+  /employees/{id}/skills/{skillid}:
+    put:
+      tags:
+        - employees
+      summary: update a employee specific skill
+      operationId: employeeUpdateSkill
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: skillid
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSkill'
+      responses:
+        "204":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UpdateSkill'
+        "404":
+          description: could not access the skill on said id.
+    delete:
+      tags:
+        - employees
+      summary: delete an employee specific skill
+      operationId: employeeDeleteSkill
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: skillid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UpdateSkill'
+        "404":
+          description: could not access the skill on said id.
+
+  /languages:
+    get:
+      tags:
+        - languages
+      summary: reads all languages data
+      description: This operation provides a view of the language data in JSON
+      operationId: getAllLanguages
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: Filter languages where first or last name has any match.
+          schema:
+            type: string
+            example: Eng, lish, sh, Englis, etc.
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Language'
+        "404":
+          description: could not access the languages.
+    post:
+      tags:
+        - languages
+      summary: adds a new language
+      description: Add a new language to the system
+      operationId: addLanguage
+      requestBody:
+        description: the new language data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Language'
+        required: true
+      responses:
+        "201":
+          description: Success. Body includes the auto-generated key for the new customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Language'
+        "405":
+          description: Invalid Input
+  /languages/{id}:
+    get:
+      tags:
+        - languages
+      summary: get language per id
+      parameters:
+        - name: id
+          in: path
+          description: the id from the language
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: retrieves successfully the specific language
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Language'
+        "400":
+          description: Bad Request
+        "404":
+          description: Employee not found
+    put:
+      tags:
+        - languages
+      summary: update existing language
+      description: Updates an existing language with new data
+      operationId: updateLanguage
+      parameters:
+        - name: id
+          in: path
+          description: the id of the language to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        description: the updated Language data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Language'
+        required: true
+      responses:
+        "204":
+          description: Success.
+        "404":
+          description: Language Not Found
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - languages
+      summary: delete an existing Language
+      description: Deletes an existing language in the system.
+      operationId: deleteLanguage
+      parameters:
+        - name: id
+          in: path
+          description: the id of the language to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The language was deleted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Language'
+        "404":
+          description: Language Not Found
+        "500":
+          description: Internal Server Error
+  /skills:
+    get:
+      tags:
+        - skills
+      summary: reads all skills data
+      description: This operation provides a view of the skills data in JSON
+      operationId: getAllSkills
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: Filter skills where first or last name has any match.
+          schema:
+            type: string
+            example: Ja, va, Java, C, etc.
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Skill'
+        "404":
+          description: could not access the skills.
+    post:
+      tags:
+        - skills
+      summary: adds a new skill
+      description: Add a new skill to the system
+      operationId: addSkill
+      requestBody:
+        description: the new skill data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+        required: true
+      responses:
+        "201":
+          description: Success. Body includes the auto-generated key for the new customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+        "405":
+          description: Invalid Input
+  /skills/{id}:
+    get:
+      tags:
+        - skills
+      summary: get skills per Id
+      parameters:
+        - name: id
+          in: path
+          description: the id from the skill
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: retrieves successfully the specific skill
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+        "400":
+          description: Bad Request
+        "404":
+          description: Skill not found
+    put:
+      tags:
+        - skills
+      summary: update existing skill
+      description: Updates an existing skill with new data
+      operationId: updateSkillbyid
+      parameters:
+        - name: id
+          in: path
+          description: the id of the skill to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        description: the updated Skills data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+        required: true
+      responses:
+        "204":
+          description: Success.
+        "404":
+          description: Skill Not Found
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - skills
+      summary: delete an existing Skill
+      description: Deletes an existing Skill in the system.
+      operationId: deleteSkillbyId
+      parameters:
+        - name: id
+          in: path
+          description: the id of the Skill to delete
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The skill was deleted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Skill'
+        "404":
+          description: Skill Not Found
+        "500":
+          description: Internal Server Error
+  /jobTitle:
+    get:
+      tags:
+        - jobTitle
+      summary: reads all jobTitle data
+      description: This operation provides a view of the  jobTitles data in JSON
+      operationId: getAllJobTitle
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: Filter jobTitle where first or last name has any match.
+          schema:
+            type: string
+            example: Deve, Loper, Developer, etc.
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobTitle'
+        "404":
+          description: could not access the jobs.
+    post:
+      tags:
+        - skills
+      summary: adds a new Job
+      description: Add a new Job to the system
+      operationId: addJob
+      requestBody:
+        description: the new Job data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobTitle'
+        required: true
+      responses:
+        "201":
+          description: Success. Body includes the auto-generated key for the new customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobTitle'
+        "405":
+          description: Invalid Input
+  /jobTitle/{id}:
+    get:
+      tags:
+        - jobTitle
+      summary: get Job titles per Id
+      parameters:
+        - name: id
+          in: path
+          description: the id from the Job
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: retrieves successfully the specific Job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobTitle'
+        "400":
+          description: Bad Request
+        "404":
+          description: Job not found
+    put:
+      tags:
+        - jobTitle
+      summary: update existing skill
+      description: Updates an existing Job with new data
+      operationId: updateJobTitleById
+      parameters:
+        - name: id
+          in: path
+          description: the id of the Job to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        description: the updated Job data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobTitle'
+        required: true
+      responses:
+        "204":
+          description: Success.
+        "404":
+          description: Job Not Found
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - jobTitle
+      summary: delete an existing Job
+      description: Deletes an existing Job in the system.
+      operationId: deleteJobById
+      parameters:
+        - name: id
+          in: path
+          description: the id of the Job to delete
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The Job was deleted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JobTitle'
+        "404":
+          description: Job Not Found
+        "500":
+          description: Internal Server Error
+  /department:
+    get:
+      tags:
+        - departments
+      summary: reads all departments data
+      description: This operation provides a view of the departments data in JSON
+      operationId: getAllDepartments
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: Filter departments where first or last name has any match.
+          schema:
+            type: string
+            example: Ser, vices, Personal,  etc.
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Department'
+        "404":
+          description: could not access the department.
+    post:
+      tags:
+        - departments
+      summary: adds a new departments
+      description: Add a new department to the system
+      operationId: addDepartment
+      requestBody:
+        description: the new department data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+        required: true
+      responses:
+        "201":
+          description: Success. Body includes the auto-generated key for the new customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+        "405":
+          description: Invalid Input
+  /department/{id}:
+    get:
+      tags:
+        - department
+      summary: get departments per Id
+      parameters:
+        - name: id
+          in: path
+          description: the id from the Department
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: retrieves successfully the specific Department
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+        "400":
+          description: Bad Request
+        "404":
+          description: Departments not found
+    put:
+      tags:
+        - department
+      summary: update existing skill
+      description: Updates an existing Department with new data
+      operationId: updateDepartmentById
+      parameters:
+        - name: id
+          in: path
+          description: the id of the Department to update
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        description: the updated Department data in JSON format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+        required: true
+      responses:
+        "204":
+          description: Success.
+        "404":
+          description: Department Not Found
+        "500":
+          description: Internal Server Error
+    delete:
+      tags:
+        - department
+      summary: delete an existing Department
+      description: Deletes an existing Department in the system.
+      operationId: deleteDepartmentById
+      parameters:
+        - name: id
+          in: path
+          description: the id of the Department to delete
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The Department was deleted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Department'
+        "404":
+          description: Department Not Found
+        "500":
+          description: Internal Server Error
+components:
+  schemas:
+    Employee:
+      required:
+        - birthDate
+        - email
+        - employeeLanguages
+        - employeeSkills
+        - firstName
+        - lastName
+        - password
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        email:
+          type: string
+        password:
+          type: string
+        mobileNumber:
+          type: string
+        location:
+          type: string
+        aboutMe:
+          type: string
+        jobTitle:
+          type: string
+        department:
+          type: string
+        employeeSkills:
+          type: array
+          items:
+            $ref: '#/components/schemas/Skill'
+        employeeLanguages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+    Language:
+      required:
+        - languageName
+        - level
+      type: object
+      properties:
+        id:
+          type: string
+        languageName:
+          type: string
+        level:
+          type: string
+          enum:
+            - beginner
+            - intermediate
+            - expert
+    Skill:
+      required:
+        - category
+        - proficiency
+        - skillName
+      type: object
+      properties:
+        id:
+          type: string
+        skillName:
+          type: string
+        category:
+          type: string
+          enum:
+            - soft skills
+            - technical skills
+        proficiency:
+          type: string
+          enum:
+            - beginner
+            - intermediate
+            - expert
+
+    JobTitle:
+      required:
+        - jobTitle
+      type: object
+      properties:
+        id:
+          type: string
+        jobTitle:
+          type: string
+    Department:
+      required:
+        - department
+      type: object
+      properties:
+        id:
+          type: string
+        department:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
